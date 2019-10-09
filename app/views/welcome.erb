@@ -1,23 +1,24 @@
-<div class="container">
-  <header><img src="images/corneal-small.png" class="img-responsive main-image"></header>
-  <div class="col-md-8 col-md-offset-2">
-    <h2>Sinatra Template Default Page</h2>
+<div class="Welcome">
+  <center>
+    <h2>Keep track of your medications!</h2>
+    <p>This is an app that allows you to keep a log of your medications for easy referencing.</p><br>
+    
+    <h4>Existing account holders, please Log In to view your Medication Log.</h4><br>
+      <form action="/login" method="post">
+      <label for= "username">Username:</label>
+      <input type="text" name="username"><br>
 
-    <div class="content">
-      <p>Welcome to the Sinatra Template! If you're seeing this page, then everything is working
-      as expected. To get started, delete this file (<code>app/views/welcome.erb)</code> and begin adding
-      your own actions to <code>application_controller.rb</code>. For more information, see the <a href="https://github.com/thebrianemory/corneal">README</a>.</p>
-    </div>
+      <label for= "email">Email:</label>
+      <input type="text" name="email"><br>
 
-    <div class="sidebar">
-      <h3>Environment</h3>
-      <ul>
-        <li><b>Ruby:</b> <%= RUBY_VERSION %></li>
-        <li><b>Environment:</b> <%= ENV["RACK_ENV"] %></li>
-        <li><b>Server:</b> <%= @env["SERVER_SOFTWARE"] %></li>
-        <li><b>Port:</b> <%= @env["SERVER_PORT"] %></li>
-      </ul>
-    </div>
+      <label for= "password">Password:</label>
+      <input type="text" name="password"><br>
 
-  </div>
+      <input type="submit" value="Log In">
+  </form><br>
+
+
+    <h3>New Clients? Please Sign Up to create your Medication Log!</h3><br>
+    <a href="/signup">Sign Up</a> 
+  </center>
 </div>
