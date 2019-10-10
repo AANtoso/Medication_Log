@@ -6,6 +6,7 @@ class CreateMedications < ActiveRecord::Migration
       t.string :indication
       t.string :dose
       t.string :frequency
+      t.text :instructions
       t.integer :user_id
     end
   end
