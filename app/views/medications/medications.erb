@@ -1,0 +1,14 @@
+<center>
+<h1>Medication List</h1>
+
+<ul>
+    <% @medications.each do |medication| %>
+    <li>
+        <a href="/medications/<%= medication.id %>"<%= medication.name %></a>
+    </li>
+    <% end %>
+</ul>
+
+</center>
+
+<p><a href="/bottles/new">Add a medication to your list!</a></p>
