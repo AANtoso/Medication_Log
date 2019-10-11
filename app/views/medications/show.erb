@@ -9,4 +9,15 @@ Frequency: <%= @medication.frequency %><br>
 Instructions: <%= @medication.instructions %><br>
 </p> 
 
+<form method="get" action="/medications/<%= @medication.id %>/edit">
+<input type="submit" name="edit" value="Edit">
+</form>
+
+<form method="post" action="/medications/<%= @medication.id %>">
+<input type="hidden" input id="hidden" name="_method" value="Delete">
+<input type="submit" input id="delete" name="delete" value="Delete">
+</form>
+
+<p><a href="/medications">Go back to medication list.</a></p>
+
 </center>
