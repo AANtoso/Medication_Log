@@ -79,32 +79,44 @@ end
   end
 end
 
-post 'signup' do
+  post 'signup' do
   @user = User.new(params)
-  if @user.save && !params[:username].empty? && !params[:email].empty?
+    if @user.save && !params[:username].empty? && !params[:email].empty?
     @user.save
     session[:user_id] = @user.id
     redirect "/medications"
-  else
-    redirect "/signup"
+    else
+      redirect "/signup"
+    end
   end
-end
 
-post '/login' do
-  user = User.find_by(username: params[:username])
-  if user && user.authenticate(params[:password])
+  post '/login' do
+    user = User.find_by(username: params[:username])
+    if user && user.authenticate(params[:password])
       session[:user_id] = user.id
       redirect '/medications'
-  else
-    redirect "/signup"
+    else
+      redirect "/signup"
+    end
   end
-end
 
-post '/medications' do
-  if !params[:medication_name].empty?
-    @medication = Medication.create(medication_name: params[:medication_name])
-  else
-    redirect "/medications/new"
+  post '/medications' do
+    if !params[:medication_name].empty?
+      @medication = Medication.create(medication_name: params[:medication_name])
+    else
+      redirect "/medications/new"
+    end
   end
+
+  patch '/medications/:id' do
+    @medication = Medication.find(params[:id])
+    @medication.update(medication_name: params[:medication_name])
+    if !@medication.medication_name.empty?
+      redirect "/medications/#{@medication.id}"
+    else
+      redirect "/medications#{medication.id}/edit"
+    end
+  end 
+
 
 end
