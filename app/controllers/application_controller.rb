@@ -5,6 +5,8 @@ class ApplicationController < Sinatra::Base
   configure do
     set :public_folder, 'public'
     set :views, 'app/views'
+    enable :sessions
+    set :session_secret, "secret"
   end
 
   get "/" do
@@ -22,19 +24,21 @@ class ApplicationController < Sinatra::Base
   end
 
   get '/signup' do
-    if !!logged_in?
-      erb :'users/new'
-    else
-      redirect "/medications"
-    end
+    erb :"/users/new"
+    # if !!logged_in?
+    #   erb :"users/new"
+    # else
+    #   redirect "/"
+    # end
   end
 
   get '/login' do
-    if logged_in?
-        redirect "/medications"
-    else
-      erb :'users/login'
-  end
+    erb :"/users/login"
+  #   if logged_in?
+  #       redirect "/medications"
+  #   else
+  #     erb :"users/new"
+  # end
 end
 
   get '/logout' do
@@ -42,18 +46,32 @@ end
     redirect "/"
   end
 
-  get '/medications' do
-  @medications = Medication.all 
-    if logged_in?
-      erb :"medications/medications"
-    else
-      redirect "/login"
-    end
+  get '/users/new' do
+      erb :"users/new"
   end
+
+  get '/medications' do 
+    if logged_in?
+      @user = current_user
+      @medications = @user.medications
+      erb :"medications/new"
+    else
+      redirect "/users/new"
+    end
+  end 
+
+  # get '/medications' do
+  # @medications = Medication.all 
+  #   if logged_in?
+  #     erb :"medications/medications"
+  #   else
+  #     redirect "/login"
+  #   end
+  # end
 
   get '/medications/new' do
     if logged_in?
-      erb :'medications/new'
+      erb :"medications/new"
     else
       redirect "/login"
     end
@@ -72,21 +90,20 @@ end
     if logged_in?
       @medication = Medication.find(params[:id])
     if @medication.used_id == current_user.id
-      erb '/medications/edit'
+      erb :"/medications/edit"
     else
       redirect "/medications"
     end
   end
 end
 
-  post 'signup' do
+  post '/signup' do
   @user = User.new(params)
-    if @user.save && !params[:username].empty? && !params[:email].empty?
-    @user.save
+    if @user.save # && !params[:username].empty? && !params[:email].empty?
     session[:user_id] = @user.id
     redirect "/medications"
     else
-      redirect "/signup"
+      redirect "/users/new"
     end
   end
 
@@ -117,6 +134,8 @@ end
       redirect "/medications#{medication.id}/edit"
     end
   end 
+
+
 
 
 end
