@@ -135,7 +135,14 @@ end
     end
   end 
 
-
-
+  delete 'medications/:id/delete' do
+    @medication = Medication.find(params[:id])
+    if logged_in? && @medication.user_id == current_user.id
+      @medication.destroy
+      redirect "/medications"
+    else
+      redirect "/login"
+    end
+  end
 
 end
