@@ -84,9 +84,9 @@ post 'signup' do
   if @user.save && !params[:username].empty? && !params[:email].empty?
     @user.save
     session[:user_id] = @user.id
-    redirect '/medications'
+    redirect "/medications"
   else
-    redirect '/signup'
+    redirect "/signup"
   end
 end
 
@@ -96,8 +96,15 @@ post '/login' do
       session[:user_id] = user.id
       redirect '/medications'
   else
-    redirect '/signup'
+    redirect "/signup"
   end
 end
+
+post '/medications' do
+  if !params[:medication_name].empty?
+    @medication = Medication.create(medication_name: params[:medication_name])
+  else
+    redirect "/medications/new"
+  end
 
 end
