@@ -12,8 +12,8 @@ class ApplicationController < Sinatra::Base
   end
 
   helpers do
-    def logger_in?
-      !!session[user_id]
+    def logged_in?
+      !!session[:user_id]
     end
 
     def current_user
@@ -90,7 +90,14 @@ post 'signup' do
   end
 end
 
-
-
+post '/login' do
+  user = User.find_by(username: params[:username])
+  if user && user.authenticate(params[:password])
+      session[:user_id] = user.id
+      redirect '/medications'
+  else
+    redirect '/signup'
+  end
+end
 
 end
