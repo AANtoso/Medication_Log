@@ -53,8 +53,8 @@ class ApplicationController < Sinatra::Base
   get '/medications' do 
     if session[:user_id]
       @user = current_user
-      @medications = @user.medication
-      erb :"medications/new"
+      @medications = @user.medications
+      erb :"medications/medications"
     else
       redirect "/users/new"
     end
@@ -70,19 +70,20 @@ class ApplicationController < Sinatra::Base
 
   post '/medications' do 
     @user = current_user
-    @medication = @user.medication.create(params)
+    @medication = @user.medications.build(params)
     if @medication.save
-      redirect "/medications/show"
+      redirect "/medications/#{@medication.id}"
     else
       redirect "/medications/new"
     end
   end
 
-  get '/medications/:id/show' do
+  get '/medications/:id' do
     @medication = Medication.find(params[:id])
     erb :"/medications/show"
   end
   
+
   # post '/medications' do
   #   if !params[:medication_name].empty?
   #     binding.pry
@@ -160,8 +161,15 @@ class ApplicationController < Sinatra::Base
   end 
 
   delete '/medications/:id' do
-      Medication.destroy(params[:id])
-      redirect "/medications"
+      @medication = Medication.find(params[:id])
+      if logged_in? && @medication.user_id == current_user
+        @medication.destroy
+        redirect "/medications"
+      else
+        redirect "/login"
+      end
+      # Medication.destroy(params[:id])
+      # redirect "/medications"
   end
 
 end
