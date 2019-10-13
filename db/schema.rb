@@ -19,6 +19,7 @@ ActiveRecord::Schema.define(version: 20191013185200) do
     t.string  "indication"
     t.string  "dose"
     t.string  "frequency"
+    t.text    "instructions"
     t.integer "user_id"
   end
 

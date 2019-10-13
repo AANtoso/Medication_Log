@@ -19,7 +19,7 @@ class ApplicationController < Sinatra::Base
     end
 
     def current_user
-      User.find(session[:user_id])
+      User.find_by_id(session[:user_id])
     end
   end
 
@@ -54,6 +54,9 @@ class ApplicationController < Sinatra::Base
     if session[:user_id]
       @user = current_user
       @medications = @user.medications
+      @medications.each do |medication|
+        puts medication.medication_name
+      end
       erb :"medications/medications"
     else
       redirect "/users/new"
@@ -72,7 +75,7 @@ class ApplicationController < Sinatra::Base
     @user = current_user
     @medication = @user.medications.build(params)
     if @medication.save
-      redirect "/medications/#{@medication.id}"
+      redirect "/medications"
     else
       redirect "/medications/new"
     end
@@ -161,15 +164,15 @@ class ApplicationController < Sinatra::Base
   end 
 
   delete '/medications/:id' do
-      @medication = Medication.find(params[:id])
-      if logged_in? && @medication.user_id == current_user
-        @medication.destroy
-        redirect "/medications"
-      else
-        redirect "/login"
-      end
-      # Medication.destroy(params[:id])
-      # redirect "/medications"
+      # @medication = Medication.find(params[:id])
+      # if logged_in? && @medication.user_id == current_user
+      #   @medication.destroy
+      #   redirect "/medications"
+      # else
+      #   redirect "/login"
+      # end
+      Medication.destroy(params[:id])
+      redirect "/medications"
   end
 
 end

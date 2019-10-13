@@ -2,9 +2,9 @@
 <h1>Medication List</h1>
 
 <ul>
-    <% @medications.each do |medication| %>
+<% @medications.each do |medication| %>
     <li>
-        <a href="/medications/<%= medication.id %>"<%= medication.medication_name %></a>
+    <a href="/medications/<%= medication.id %>"><%= medication.medication_name %></a>
     </li>
     <% end %>
 </ul>
