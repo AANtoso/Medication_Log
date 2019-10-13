@@ -1,10 +1,10 @@
 <h3>Sign Up Here</h3>
-<form action="/signup" method="post">
+<form action="/users" method="post">
       <label for= "username">Username:</label>
-      <input type="text" name="username"><br>
+      <input type="text" name="username" value="<%= @user ? @user.username : "" %>"><br>
 
       <label for= "email">Email:</label>
-      <input type="text" name="email"><br>
+      <input type="text" name="email" value="<%= @user ? @user.email : "" %>"><br>
 
       <label for= "password">Password:</label>
       <input type="password" name="password"><br>

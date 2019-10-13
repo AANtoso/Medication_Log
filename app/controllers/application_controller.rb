@@ -25,33 +25,39 @@ class ApplicationController < Sinatra::Base
 
   get '/signup' do
     erb :"/users/new"
-    # if !!logged_in?
-    #   erb :"users/new"
-    # else
-    #   redirect "/"
-    # end
   end
+
+  post '/users' do
+      @user = User.new(params)
+      if @user.save
+        session[:user_id] = @user.id
+        redirect "/medications"
+      # else 
+      #   redirect "/signup"
+      end
+  end 
 
   get '/login' do
     erb :"/users/login"
-  #   if logged_in?
-  #       redirect "/medications"
-  #   else
-  #     erb :"users/new"
-  # end
-end
+  end
+
+  post '/login' do
+    @user = User.find_by(username: params[:username])
+    if @user && @user.authenticate(params[:password])
+      session[:user_id] = @user.id
+      redirect '/medications'
+    else
+      redirect "/login"
+    end
+  end
 
   get '/logout' do
     session.clear
     redirect "/"
   end
 
-  get '/users/new' do
-      erb :"users/new"
-  end
-
   get '/medications' do 
-    if logged_in?
+    if session[:user_id]
       @user = current_user
       @medications = @user.medications
       erb :"medications/new"
@@ -59,6 +65,38 @@ end
       redirect "/users/new"
     end
   end 
+
+  get '/medications/new' do
+    if logged_in?
+      erb :"medications/new"
+    else
+      redirect "/login"
+    end
+  end
+
+  post '/medications' do 
+    @user = current_user
+    @medication = @user.medication.create(params)
+    if @blog.save
+      redirect "/medications"
+    else
+      redirect "/medications/new"
+    end
+  end
+
+  # post '/medications' do
+  #   if !params[:medication_name].empty?
+  #     @medication = Medication.create(medication_name: params[:medication_name])
+  #   else
+  #     redirect "/medications/new"
+  #   end
+  # end
+
+  # get '/users/new' do
+  #     erb :"users/new"
+  # end
+
+  
 
   # get '/medications' do
   # @medications = Medication.all 
@@ -69,17 +107,17 @@ end
   #   end
   # end
 
-  get '/medications/new' do
-    if logged_in?
-      erb :"medications/new"
-    else
-      redirect "/login"
-    end
-  end
+  # get '/medications/new' do
+  #   if logged_in?
+  #     erb :"medications/new"
+  #   else
+  #     redirect "/login"
+  #   end
+  # end
 
   get '/medications/:id' do
     @medication = Medication.find(params[:id])
-    if logged_in?
+    if @medication
       erb :"/medications/medication"
     else
       redirect "/login"
@@ -87,48 +125,34 @@ end
   end
 
   get '/medications/:id/edit' do
-    if logged_in?
       @medication = Medication.find(params[:id])
-    if @medication.used_id == current_user.id
       erb :"/medications/edit"
-    else
-      redirect "/medications"
-    end
-  end
-end
-
-  post '/signup' do
-  @user = User.new(params)
-    if @user.save # && !params[:username].empty? && !params[:email].empty?
-    session[:user_id] = @user.id
-    redirect "/medications"
-    else
-      redirect "/users/new"
-    end
   end
 
-  post '/login' do
-    user = User.find_by(username: params[:username])
-    if user && user.authenticate(params[:password])
-      session[:user_id] = user.id
-      redirect '/medications'
-    else
-      redirect "/signup"
-    end
-  end
+  # post '/signup' do
+  # @user = User.new(params)
+  #   if @user.save # && !params[:username].empty? && !params[:email].empty?
+  #   session[:user_id] = @user.id
+  #   redirect "/medications"
+  #   else
+  #     redirect "/users/new"
+  #   end
+  # end
 
-  post '/medications' do
-    if !params[:medication_name].empty?
-      @medication = Medication.create(medication_name: params[:medication_name])
-    else
-      redirect "/medications/new"
-    end
-  end
+  
+
+  # post '/medications' do
+  #   if !params[:medication_name].empty?
+  #     @medication = Medication.create(medication_name: params[:medication_name])
+  #   else
+  #     redirect "/medications/new"
+  #   end
+  # end
 
   patch '/medications/:id' do
     @medication = Medication.find(params[:id])
-    @medication.update(medication_name: params[:medication_name])
-    if !@medication.medication_name.empty?
+    if @medication.update(medication_name: params[:medication_name])
+      # , params[:class], params[:indication], params[:dose], params[:frequency], params[:instructions])
       redirect "/medications/#{@medication.id}"
     else
       redirect "/medications#{medication.id}/edit"
@@ -136,13 +160,8 @@ end
   end 
 
   delete 'medications/:id/delete' do
-    @medication = Medication.find(params[:id])
-    if logged_in? && @medication.user_id == current_user.id
-      @medication.destroy
+      Medication.destroy(params[:id])
       redirect "/medications"
-    else
-      redirect "/login"
-    end
   end
 
 end
