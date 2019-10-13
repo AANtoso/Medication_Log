@@ -27,24 +27,18 @@ class ApplicationController < Sinatra::Base
     erb :"/users/new"
   end
 
-  post '/users' do
-      @user = User.new(params)
-      if @user.save
-        session[:user_id] = @user.id
-        redirect "/medications"
-      # else 
-      #   redirect "/signup"
-      end
-  end 
-
   get '/login' do
+    if logged_in?
+      redirect "/medications"
+    else
     erb :"/users/login"
+    end
   end
 
   post '/login' do
-    @user = User.find_by(username: params[:username])
-    if @user && @user.authenticate(params[:password])
-      session[:user_id] = @user.id
+    user = User.find_by(username: params[:username])
+    if user && user.authenticate(params[:password])
+      session[:user_id] = user.id
       redirect '/medications'
     else
       redirect "/login"
@@ -77,7 +71,7 @@ class ApplicationController < Sinatra::Base
   post '/medications' do 
     @user = current_user
     @medication = @user.medication.create(params)
-    if @blog.save
+    if @medication.save
       redirect "/medications"
     else
       redirect "/medications/new"
@@ -129,15 +123,15 @@ class ApplicationController < Sinatra::Base
       erb :"/medications/edit"
   end
 
-  # post '/signup' do
-  # @user = User.new(params)
-  #   if @user.save # && !params[:username].empty? && !params[:email].empty?
-  #   session[:user_id] = @user.id
-  #   redirect "/medications"
-  #   else
-  #     redirect "/users/new"
-  #   end
-  # end
+  post '/signup' do
+  @user = User.new(params)
+    if @user.save # && !params[:username].empty? && !params[:email].empty?
+    session[:user_id] = @user.id
+    redirect "/medications"
+    else
+      redirect "/users/new"
+    end
+  end
 
   
 
