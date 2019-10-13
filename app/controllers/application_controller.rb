@@ -12,7 +12,7 @@ class ApplicationController < Sinatra::Base
   get "/" do
     erb :welcome
   end
-
+  
   helpers do
     def logged_in?
       !!session[:user_id]
@@ -78,13 +78,14 @@ class ApplicationController < Sinatra::Base
     end
   end
 
-  # post '/medications' do
-  #   if !params[:medication_name].empty?
-  #     @medication = Medication.create(medication_name: params[:medication_name])
-  #   else
-  #     redirect "/medications/new"
-  #   end
-  # end
+  post '/medications' do
+    if !params[:medication_name].empty?
+      binding.pry
+      @medication = Medication.create(medication_name: params[:medication_name])
+    else
+      redirect "/medications/new"
+    end
+  end
 
   # get '/users/new' do
   #     erb :"users/new"
