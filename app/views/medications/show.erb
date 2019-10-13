@@ -3,15 +3,12 @@
 <h3>Indication: <%= @medication.indication %></h3>
 
 <p>
-Class: <%= @medication.class %><br>
+Therapeutic Class: <%= @medication.therapeutic_class %><br>
 Dose: <%= @medication.dose %><br>
 Frequency: <%= @medication.frequency %><br>
-Instructions: <%= @medication.instructions %><br>
 </p> 
 
-<form method="get" action="/medications/<%= @medication.id %>/edit">
-<input type="submit" name="edit" value="Edit">
-</form>
+<p><a href="/medications/<%= @medication.id %>/edit">Edit</a></p> 
 
 <form method="post" action="/medications/<%= @medication.id %>">
 <input type="hidden" input id="hidden" name="_method" value="Delete">

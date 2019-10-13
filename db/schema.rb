@@ -11,11 +11,11 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20191013165339) do
+ActiveRecord::Schema.define(version: 20191013185200) do
 
   create_table "medications", force: :cascade do |t|
     t.string  "medication_name"
-    t.string  "class"
+    t.string  "therapeutic_class"
     t.string  "indication"
     t.string  "dose"
     t.string  "frequency"

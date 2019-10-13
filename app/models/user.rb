@@ -1,5 +1,5 @@
 class User < ActiveRecord::Base
-    has_many :medications
+    has_many :medication
     has_secure_password
 
     validates :username, :email, presence: true

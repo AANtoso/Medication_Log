@@ -12,7 +12,7 @@ class ApplicationController < Sinatra::Base
   get "/" do
     erb :welcome
   end
-  
+
   helpers do
     def logged_in?
       !!session[:user_id]
@@ -53,7 +53,7 @@ class ApplicationController < Sinatra::Base
   get '/medications' do 
     if session[:user_id]
       @user = current_user
-      @medications = @user.medications
+      @medications = @user.medication
       erb :"medications/new"
     else
       redirect "/users/new"
@@ -72,20 +72,25 @@ class ApplicationController < Sinatra::Base
     @user = current_user
     @medication = @user.medication.create(params)
     if @medication.save
-      redirect "/medications"
+      redirect "/medications/show"
     else
       redirect "/medications/new"
     end
   end
 
-  post '/medications' do
-    if !params[:medication_name].empty?
-      binding.pry
-      @medication = Medication.create(medication_name: params[:medication_name])
-    else
-      redirect "/medications/new"
-    end
+  get '/medications/:id/show' do
+    @medication = Medication.find(params[:id])
+    erb :"/medications/show"
   end
+  
+  # post '/medications' do
+  #   if !params[:medication_name].empty?
+  #     binding.pry
+  #     @medication = Medication.create(medication_name: params[:medication_name])
+  #   else
+  #     redirect "/medications/new"
+  #   end
+  # end
 
   # get '/users/new' do
   #     erb :"users/new"
@@ -113,7 +118,7 @@ class ApplicationController < Sinatra::Base
   get '/medications/:id' do
     @medication = Medication.find(params[:id])
     if @medication
-      erb :"/medications/medication"
+      erb :"/medications/show"
     else
       redirect "/login"
     end
@@ -146,15 +151,15 @@ class ApplicationController < Sinatra::Base
 
   patch '/medications/:id' do
     @medication = Medication.find(params[:id])
-    if @medication.update(medication_name: params[:medication_name])
-      # , params[:class], params[:indication], params[:dose], params[:frequency], params[:instructions])
+    puts params 
+    if @medication.update(params["medication"])
       redirect "/medications/#{@medication.id}"
     else
       redirect "/medications#{medication.id}/edit"
     end
   end 
 
-  delete 'medications/:id/delete' do
+  delete '/medications/:id' do
       Medication.destroy(params[:id])
       redirect "/medications"
   end
