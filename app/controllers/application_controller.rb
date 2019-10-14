@@ -112,7 +112,7 @@ class ApplicationController < Sinatra::Base
 
   patch '/medications/:id' do
     @medication = Medication.find(params[:id])
-    puts params 
+    # puts params 
     if @medication.update(params["medication"])
       redirect "/medications/#{@medication.id}"
     else
