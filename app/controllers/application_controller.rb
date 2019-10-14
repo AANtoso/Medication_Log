@@ -86,39 +86,6 @@ class ApplicationController < Sinatra::Base
     erb :"/medications/show"
   end
   
-
-  # post '/medications' do
-  #   if !params[:medication_name].empty?
-  #     binding.pry
-  #     @medication = Medication.create(medication_name: params[:medication_name])
-  #   else
-  #     redirect "/medications/new"
-  #   end
-  # end
-
-  # get '/users/new' do
-  #     erb :"users/new"
-  # end
-
-  
-
-  # get '/medications' do
-  # @medications = Medication.all 
-  #   if logged_in?
-  #     erb :"medications/medications"
-  #   else
-  #     redirect "/login"
-  #   end
-  # end
-
-  # get '/medications/new' do
-  #   if logged_in?
-  #     erb :"medications/new"
-  #   else
-  #     redirect "/login"
-  #   end
-  # end
-
   get '/medications/:id' do
     @medication = Medication.find(params[:id])
     if @medication
@@ -135,23 +102,13 @@ class ApplicationController < Sinatra::Base
 
   post '/signup' do
   @user = User.new(params)
-    if @user.save # && !params[:username].empty? && !params[:email].empty?
+    if @user.save 
     session[:user_id] = @user.id
     redirect "/medications"
     else
       redirect "/users/new"
     end
   end
-
-  
-
-  # post '/medications' do
-  #   if !params[:medication_name].empty?
-  #     @medication = Medication.create(medication_name: params[:medication_name])
-  #   else
-  #     redirect "/medications/new"
-  #   end
-  # end
 
   patch '/medications/:id' do
     @medication = Medication.find(params[:id])
@@ -164,15 +121,13 @@ class ApplicationController < Sinatra::Base
   end 
 
   delete '/medications/:id' do
-      # @medication = Medication.find(params[:id])
-      # if logged_in? && @medication.user_id == current_user
-      #   @medication.destroy
-      #   redirect "/medications"
-      # else
-      #   redirect "/login"
-      # end
-      Medication.destroy(params[:id])
-      redirect "/medications"
+      @medication = Medication.find(params[:id])
+      if logged_in? && @medication.user_id == current_user.id
+        @medication.destroy
+        redirect "/medications"
+      else
+        redirect "/login"
+      end
   end
 
 end
