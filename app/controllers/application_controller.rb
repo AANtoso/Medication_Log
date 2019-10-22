@@ -96,8 +96,16 @@ class ApplicationController < Sinatra::Base
   end
 
   get '/medications/:id/edit' do
+    if logged_in?
       @medication = Medication.find(params[:id])
-      erb :"/medications/edit"
+        if @medication && @medication.user_id == current_user.id  
+          erb :"/medications/edit"
+        else
+          redirect "/login"
+        end
+    else
+      redirect "/login"
+    end
   end
 
   post '/signup' do
@@ -111,12 +119,19 @@ class ApplicationController < Sinatra::Base
   end
 
   patch '/medications/:id' do
+    if logged_in?
     @medication = Medication.find(params[:id])
-    
-    if @medication.update(params["medication"])
-      redirect "/medications/#{@medication.id}"
-    else
-      redirect "/medications#{medication.id}/edit"
+      if @medication && @medication.user_id == current_user.id
+        if @medication.update(params["medication"])
+          redirect "/medications/#{@medication.id}"
+        else
+          redirect "/medications/#{@medication.id}/edit"
+        end
+      else
+        redirect "/login"
+      end
+    else 
+      redirect "/login"
     end
   end 
 
