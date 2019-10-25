@@ -81,10 +81,10 @@ class ApplicationController < Sinatra::Base
     end
   end
 
-  get '/medications/:id' do
-    @medication = Medication.find(params[:id])
-    erb :"/medications/show"
-  end
+  # get '/medications/:id' do
+  #   @medication = Medication.find(params[:id])
+  #   erb :"/medications/show"
+  # end
   
   get '/medications/:id' do
     @medication = Medication.find(params[:id])
