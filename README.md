@@ -5,7 +5,7 @@ Keeying track if your medications can be an exhausting and tasking procedure! Me
 
 ![Demo Gif](https://github.com/AANtoso/Medication_Log/blob/master/Sinatra.gif?raw=true)
 
-My Demo can be found at the following link:https://www.youtube.com/watch?v=9zSWMGXWgMQ&t=79s
+My Demo can be found at the following link: https://www.youtube.com/watch?v=9zSWMGXWgMQ&t=79s
 
 ## Installation
 To execute this application, clone and run 'bundle install'. Run 'rake db:migrate'. Use 'shotgun' to run the application in your browser.
